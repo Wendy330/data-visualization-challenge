@@ -7,3 +7,6 @@ This is a coding challenge of creating a data visualization project using d3.js.
 
 #### How to run this project:
 No specific instructions.
+
+#### line-chart preview:
+![line-chart preview](https://github.com/Wendy330/data-visualization-challenge/blob/master/images/line-chart.png)
