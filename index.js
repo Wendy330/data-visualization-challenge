@@ -2,6 +2,7 @@ d3.csv("data/flights_2015_sample.csv").then(function(data) {
 	drawChart(parseData(data));
 });
 
+// Prepare data by grouping and filtering
 function parseData(data) {
 	return d3.nest()
 		.key(function (d) { return d.CANCELLATION_REASON; })
@@ -66,9 +67,7 @@ function drawChart(data) {
 		.text(function(d) { return d.key; });
 }
 
-// Round up to hundred
+// Round up to hundred for y axis
 function findMaxValue(data) {
 	return Math.round((d3.max(data[0].values, d => d.value) + 99) / 100) * 100;
 }
-
-
