@@ -11,24 +11,34 @@ function parseData(data) {
 		.entries(data.filter(function (d) { return +d.CANCELLED === 1; }));
 }
 
+function getXScale(data, margin, width) {
+	return d3.scaleLinear()
+		.domain(d3.extent(data, d => d.values.length))
+		.rangeRound([margin.left, width - margin.right]);
+}
+
+function getYScale(data, height, margin) {
+	return d3.scaleLinear()
+		.domain([0, findMaxValue(data)])
+		.rangeRound([height - margin.bottom, margin.top]);
+}
+
+function getLineGenerator(xScale, yScale) {
+	return d3.line()
+		.curve(d3.curveMonotoneX)
+		.x(d => xScale(d.key))
+		.y(d => yScale(d.value));
+}
+
 function drawChart(data) {
 	var svg = d3.select("#chart"),
 		margin = {top: 15, right: 35, bottom: 15, left: 35},
 		width = +svg.attr("width") - margin.left - margin.right,
 		height = +svg.attr("height") - margin.top - margin.bottom;
 
-	var xScale = d3.scaleLinear()
-		.domain(d3.extent(data, d => d.values.length))
-		.rangeRound([margin.left, width - margin.right]);
-
-	var yScale = d3.scaleLinear()
-		.domain([0, findMaxValue(data)])
-		.rangeRound([height - margin.bottom, margin.top]);
-
-	var line = d3.line()
-		.curve(d3.curveMonotoneX)
-		.x(d => xScale(d.key))
-		.y(d => yScale(d.value));
+	var xScale = getXScale(data, margin, width);
+	var yScale = getYScale(data, height, margin);
+	var line = getLineGenerator(xScale, yScale);
 
 	let id = 0;
 	const ids = function () { return "line-"+id++; }
